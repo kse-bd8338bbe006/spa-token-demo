@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtClaimValidator;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -39,7 +43,13 @@ public class JwtConfig {
                 .restOperations(restOperations(sslContext))
                 .build();
 
-        decoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(issuerUri));
+        OAuth2TokenValidator<Jwt> audienceValidator = new JwtClaimValidator<java.util.List<String>>(
+                "aud", aud -> aud != null && aud.contains("notes-api"));
+        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUri);
+        OAuth2TokenValidator<Jwt> fullValidator = new DelegatingOAuth2TokenValidator<>(
+                withIssuer, audienceValidator);
+
+        decoder.setJwtValidator(fullValidator);
         return decoder;
     }
 

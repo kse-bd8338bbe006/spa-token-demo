@@ -18,8 +18,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${KEYCLOAK_ISSUER_URI:https://keycloak.192.168.50.10.nip.io/realms/api-security}
-          jwk-set-uri: ${KEYCLOAK_ISSUER_URI:https://keycloak.192.168.50.10.nip.io/realms/api-security}/protocol/openid-connect/certs
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:https://keycloak.192.168.50.10.nip.io/realms/torinks-lab}
+          jwk-set-uri: ${KEYCLOAK_ISSUER_URI:https://keycloak.192.168.50.10.nip.io/realms/torinks-lab}/protocol/openid-connect/certs
 
 app:
   internal-ca: classpath:internal-ca.pem
